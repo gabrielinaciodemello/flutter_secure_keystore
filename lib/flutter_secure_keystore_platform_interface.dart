@@ -26,4 +26,16 @@ abstract class FlutterSecureKeystorePlatform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  Future<void> createKey(String alias) async {
+    throw UnimplementedError('createKey() has not been implemented.');
+  }
+
+  Future<String> encrypt(String alias, String data) async {
+    throw UnimplementedError('encrypt() has not been implemented.');
+  }
+
+  Future<String> decrypt(String alias, String encryptedData) async {
+    throw UnimplementedError('decrypt() has not been implemented.');
+  }
 }
