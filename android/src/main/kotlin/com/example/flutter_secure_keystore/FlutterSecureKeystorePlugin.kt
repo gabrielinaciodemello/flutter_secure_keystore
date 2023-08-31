@@ -1,21 +1,23 @@
 package com.example.flutter_secure_keystore
 
 import android.content.Context
-import android.hardware.biometrics.BiometricPrompt
-import android.os.CancellationSignal
 import androidx.annotation.NonNull
+import androidx.fragment.app.FragmentActivity
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
 /** FlutterSecureKeystorePlugin */
-class FlutterSecureKeystorePlugin: FlutterPlugin, MethodCallHandler {
+class FlutterSecureKeystorePlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
   private lateinit var channel : MethodChannel
   private lateinit var context: Context
+  private var activity: FragmentActivity? = null
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "flutter_secure_keystore")
@@ -24,8 +26,8 @@ class FlutterSecureKeystorePlugin: FlutterPlugin, MethodCallHandler {
   }
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-    var cryptUtils = CryptUtils()
-    var authUtils = AuthUtils()
+    val cryptUtils = CryptUtils()
+    val authUtils = AuthUtils()
     when (call.method) {
       "getPlatformVersion" -> {
         result.success("Android ${android.os.Build.VERSION.RELEASE}")
@@ -51,7 +53,7 @@ class FlutterSecureKeystorePlugin: FlutterPlugin, MethodCallHandler {
           return
         }
         authUtils.authenticateUser(
-          this.context,
+          this.activity!!,
           onSuccess = {
             try {
               val encrypted = cryptUtils.encrypt(alias, data)
@@ -73,7 +75,7 @@ class FlutterSecureKeystorePlugin: FlutterPlugin, MethodCallHandler {
           return
         }
         authUtils.authenticateUser(
-          this.context,
+          this.activity!!,
           onSuccess = {
             try {
               val decrypted = cryptUtils.decrypt(alias, encryptedData)
@@ -93,5 +95,21 @@ class FlutterSecureKeystorePlugin: FlutterPlugin, MethodCallHandler {
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     channel.setMethodCallHandler(null)
+  }
+
+  override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+    activity = binding.activity as FragmentActivity
+  }
+
+  override fun onDetachedFromActivityForConfigChanges() {
+    activity = null
+  }
+
+  override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+    onAttachedToActivity(binding)
+  }
+
+  override fun onDetachedFromActivity() {
+    activity = null
   }
 }

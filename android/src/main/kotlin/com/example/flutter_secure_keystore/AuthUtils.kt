@@ -1,35 +1,40 @@
 package com.example.flutter_secure_keystore
 
-import android.content.Context
-import android.hardware.biometrics.BiometricPrompt
-import android.os.CancellationSignal
+import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricPrompt
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 
 class AuthUtils {
-    fun authenticateUser(context: Context, onSuccess: () -> Unit, onFailure: () -> Unit) {
-        val biometricPrompt = BiometricPrompt.Builder(context)
-            .setTitle("Authentication required")
-            .setSubtitle("Please auth to proceed.")
-            .setNegativeButton("Cancel", context.mainExecutor) { _, _ ->
-                onFailure()
-            }
-            .build()
-        val cancellationSignal = CancellationSignal()
-        cancellationSignal.setOnCancelListener {
+    fun authenticateUser(activity: FragmentActivity, onSuccess: () -> Unit, onFailure: () -> Unit) {
+        val biometricManager = BiometricManager.from(activity)
+        if (biometricManager.canAuthenticate(BiometricManager.Authenticators.DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS) {
+            val biometricPrompt = BiometricPrompt(activity, ContextCompat.getMainExecutor(activity),
+                object : BiometricPrompt.AuthenticationCallback() {
+                    override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                        onSuccess()
+                    }
+
+                    override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                        onFailure()
+                    }
+
+                    override fun onAuthenticationFailed() {
+                        onFailure()
+                    }
+                })
+
+            // Configuração do prompt de autenticação
+            val promptInfo = BiometricPrompt.PromptInfo.Builder()
+                .setTitle("Autenticação")
+                .setDescription("Por favor, autentique-se para continuar.")
+                .setAllowedAuthenticators(BiometricManager.Authenticators.DEVICE_CREDENTIAL)
+                .build()
+
+            // Exibir o prompt
+            biometricPrompt.authenticate(promptInfo)
+        } else {
             onFailure()
         }
-        biometricPrompt.authenticate(cancellationSignal, context.mainExecutor, object : BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult?) {
-                super.onAuthenticationSucceeded(result)
-                onSuccess()
-            }
-            override fun onAuthenticationError(errorCode: Int, errString: CharSequence?) {
-                super.onAuthenticationError(errorCode, errString)
-                onFailure()
-            }
-            override fun onAuthenticationFailed() {
-                super.onAuthenticationFailed()
-                onFailure()
-            }
-        })
     }
 }
