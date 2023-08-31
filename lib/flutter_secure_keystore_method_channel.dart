@@ -14,4 +14,19 @@ class MethodChannelFlutterSecureKeystore extends FlutterSecureKeystorePlatform {
     final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
     return version;
   }
+
+  @override
+  Future<void> createKey(String alias) async {
+    await methodChannel.invokeMethod('createKey', {'alias': alias});
+  }
+
+  @override
+  Future<String> encrypt(String alias, String data) async {
+    return await methodChannel.invokeMethod('encrypt', {'alias': alias, 'data': data});
+  }
+
+  @override
+  Future<String> decrypt(String alias, String encryptedData) async {
+    return await methodChannel.invokeMethod('decrypt', {'alias': alias, 'data': encryptedData});
+  }
 }
