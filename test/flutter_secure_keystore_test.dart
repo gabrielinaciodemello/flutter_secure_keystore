@@ -12,17 +12,12 @@ class MockFlutterSecureKeystorePlatform
   Future<String?> getPlatformVersion() => Future.value('42');
   
   @override
-  Future<void> createKey(String alias) {
+  Future<String> get(String key) {
     throw UnimplementedError();
   }
   
   @override
-  Future<String> decrypt(String alias, String encryptedData) {
-    throw UnimplementedError();
-  }
-  
-  @override
-  Future<String> encrypt(String alias, String data) {
+  Future<void> save(String key, String value) {
     throw UnimplementedError();
   }
 }

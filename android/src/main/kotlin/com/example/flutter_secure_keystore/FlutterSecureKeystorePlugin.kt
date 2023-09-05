@@ -32,64 +32,51 @@ class FlutterSecureKeystorePlugin: FlutterPlugin, MethodCallHandler, ActivityAwa
       "getPlatformVersion" -> {
         result.success("Android ${android.os.Build.VERSION.RELEASE}")
       }
-      "createKey" -> {
-        val alias = call.argument<String>("alias")
-        if(alias == null){
-          result.error("INVALID_INPUT", "Alias was not provided.", null)
-          return
-        }
-        try {
-          cryptUtils.createKey(alias)
-          result.success(null)
-        } catch (e: Exception) { 
-          result.error("CREATE_FAILED", e.message, null)
-        }
-      }
-      "encrypt" -> {
-        val alias = call.argument<String>("alias")
-        val data = call.argument<String>("data")
-        if (alias == null || data == null) {
-          result.error("INVALID_INPUT", "Alias or data was not provided.", null)
+      "save" -> {
+        val key = call.argument<String>("key")
+        val value = call.argument<String>("value")
+        if(key == null || value == null){
+          result.error("INVALID_INPUT", "Key or Value was not provided.", null)
           return
         }
         authUtils.authenticateUser(
           this.activity!!,
           onSuccess = {
             try {
-              val encrypted = cryptUtils.encrypt(alias, data)
-              result.success(encrypted)
+              cryptUtils.save(this.context, key, value)
+              result.success(null)
             } catch (e: Exception) {
-              result.error("ENCRYPTION_FAILED", e.message, e)
+              result.error("SAVE_FAILED", e.message, null)
             }
           },
           onFailure = {
-            result.error("ENCRYPTION_FAILED", "User is not authenticated", null)
+            result.error("SAVE_FAILED", "User is not authenticated", null)
           }
         )
       }
-      "decrypt" -> {
-        val alias = call.argument<String>("alias")
-        val encryptedData = call.argument<String>("data")
-        if(alias == null || encryptedData == null){
-          result.error("INVALID_INPUT", "Alias or encrypted data was not provided.", null)
+      "get" -> {
+        val key = call.argument<String>("key")
+        if(key == null){
+          result.error("INVALID_INPUT", "Key was not provided.", null)
           return
         }
         authUtils.authenticateUser(
           this.activity!!,
           onSuccess = {
             try {
-              val decrypted = cryptUtils.decrypt(alias, encryptedData)
-              result.success(decrypted)
+              result.success(cryptUtils.get(this.context, key))
             } catch (e: Exception) {
-              result.error("DECRYPTION_FAILED", e.message, e)
+              result.error("GET_FAILED", e.message, null)
             }
           },
           onFailure = {
-            result.error("DECRYPTION_FAILED", "User is not authenticated", null)
+            result.error("GET_FAILED", "User is not authenticated", null)
           }
         )
       }
-      else -> result.notImplemented()
+      else -> {
+        result.notImplemented()
+      }
     }
   }
 
