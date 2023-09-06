@@ -13,4 +13,8 @@ class FlutterSecureKeystore {
   Future<String> get(String key) async {
     return await FlutterSecureKeystorePlatform.instance.get(key);
   }
+
+  Future<bool?> delete(String key) async {
+    return await FlutterSecureKeystorePlatform.instance.delete(key);
+  }
 }

@@ -47,6 +47,21 @@ public class SwiftFlutterSecureKeystorePlugin: NSObject, FlutterPlugin {
             )
           )
         }
+      case "delete":
+        if let args = call.arguments as? [String: Any],
+           let key = args["key"] as? String {
+           let res = cryptUtils.delete(key: key)
+           result(res)
+        } 
+        else {
+          result(
+            FlutterError(
+              code: "INVALID_INPUT", 
+              message: "Key was not provided.", 
+              details: nil
+            )
+          )
+        }
       default:
         result(FlutterMethodNotImplemented)
     }

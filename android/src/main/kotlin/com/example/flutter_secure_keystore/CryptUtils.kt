@@ -78,5 +78,13 @@ class CryptUtils {
             encryptValue
         )
     }
+
+    fun delete(context: Context, key: String): Boolean? {
+        val sharedPreferences = context.getSharedPreferences(alias, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.remove(key)
+        editor.apply()
+        return true
+    }
     
 }

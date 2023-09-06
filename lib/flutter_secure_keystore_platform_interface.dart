@@ -34,4 +34,8 @@ abstract class FlutterSecureKeystorePlatform extends PlatformInterface {
   Future<String> get(String key) async {
     throw UnimplementedError('get() has not been implemented.');
   }
+
+  Future<bool?> delete(String key) async {
+    throw UnimplementedError('delete() has not been implemented.');
+  }
 }

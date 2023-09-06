@@ -74,6 +74,18 @@ class FlutterSecureKeystorePlugin: FlutterPlugin, MethodCallHandler, ActivityAwa
           }
         )
       }
+      "delete" -> {
+        val key = call.argument<String>("key")
+        if(key == null){
+          result.error("INVALID_INPUT", "Key was not provided.", null)
+          return
+        }
+        try {
+          result.success(cryptUtils.delete(this.context, key))
+        } catch (e: Exception) {
+          result.error("DELETE_FAILED", e.message, null)
+        }
+      }
       else -> {
         result.notImplemented()
       }
