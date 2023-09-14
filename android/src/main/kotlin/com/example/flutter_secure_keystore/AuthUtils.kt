@@ -18,10 +18,6 @@ class AuthUtils {
                 override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                     onFailure()
                 }
-
-                override fun onAuthenticationFailed() {
-                    onFailure()
-                }
             }
         )
         if(biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS){
