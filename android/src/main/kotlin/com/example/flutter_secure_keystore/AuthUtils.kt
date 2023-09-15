@@ -22,8 +22,8 @@ class AuthUtils {
         )
         if(biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG) == BiometricManager.BIOMETRIC_SUCCESS){
             val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Biometric Authentication Required")
-                .setDescription("Please auth to proceed.")
+                .setTitle("Biometric Authentication is required")
+                .setDescription("Please authenticate to proceed")
                 .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
                 .setNegativeButtonText("Cancel")
                 .build()
@@ -32,8 +32,8 @@ class AuthUtils {
         }
         if (biometricManager.canAuthenticate(BiometricManager.Authenticators.DEVICE_CREDENTIAL) == BiometricManager.BIOMETRIC_SUCCESS) {
             val promptInfo = BiometricPrompt.PromptInfo.Builder()
-                .setTitle("Authentication Required")
-                .setDescription("Please auth to proceed.")
+                .setTitle("Authentication is required")
+                .setDescription("Please authenticate to proceed")
                 .setAllowedAuthenticators(BiometricManager.Authenticators.DEVICE_CREDENTIAL)
                 .setNegativeButtonText("Cancel")
                 .build()
