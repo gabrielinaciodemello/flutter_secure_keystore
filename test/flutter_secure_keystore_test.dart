@@ -25,6 +25,11 @@ class MockFlutterSecureKeystorePlatform
   Future<bool?> delete(String key) {
     throw UnimplementedError();
   }
+  
+  @override
+  Future<bool?> clear() {
+    throw UnimplementedError();
+  }
 }
 
 void main() {

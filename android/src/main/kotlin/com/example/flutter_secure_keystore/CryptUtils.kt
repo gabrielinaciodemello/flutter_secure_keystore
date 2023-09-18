@@ -86,5 +86,13 @@ class CryptUtils {
         editor.apply()
         return true
     }
+
+    fun clear(context: Context): Boolean {
+        val sharedPreferences = context.getSharedPreferences(alias, Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.clear()
+        editor.apply()
+        return true
+    }
     
 }

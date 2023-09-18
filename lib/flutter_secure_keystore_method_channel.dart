@@ -30,4 +30,9 @@ class MethodChannelFlutterSecureKeystore extends FlutterSecureKeystorePlatform {
     return await methodChannel.invokeMethod('delete', {'key': key});
   }
 
+  @override
+  Future<bool?> clear() async {
+    return await methodChannel.invokeMethod('clear', {});
+  }
+
 }

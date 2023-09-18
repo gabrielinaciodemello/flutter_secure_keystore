@@ -86,6 +86,13 @@ class FlutterSecureKeystorePlugin: FlutterPlugin, MethodCallHandler, ActivityAwa
           result.error("DELETE_FAILED", e.message, null)
         }
       }
+      "clear" -> {
+        try {
+          result.success(cryptUtils.clear(this.context))
+        } catch (e: Exception) {
+          result.error("CLEAR_FAILED", e.message, null)
+        }
+      }
       else -> {
         result.notImplemented()
       }

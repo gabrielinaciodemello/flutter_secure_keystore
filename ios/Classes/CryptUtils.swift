@@ -65,4 +65,15 @@ public class CryptUtils {
         let status = SecItemDelete(query as CFDictionary)
         return status == errSecSuccess
     }
+
+    func clear() -> Bool {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: service
+        ]
+        
+        let status = SecItemDelete(query as CFDictionary)
+        return status == errSecSuccess
+    }
+
 }

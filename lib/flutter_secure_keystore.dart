@@ -17,4 +17,8 @@ class FlutterSecureKeystore {
   Future<bool?> delete(String key) async {
     return await FlutterSecureKeystorePlatform.instance.delete(key);
   }
+
+  Future<bool?> clear() async {
+    return await FlutterSecureKeystorePlatform.instance.clear();
+  }
 }

@@ -62,6 +62,9 @@ public class SwiftFlutterSecureKeystorePlugin: NSObject, FlutterPlugin {
             )
           )
         }
+      case "clear":
+        let res = cryptUtils.clear()
+        result(res)
       default:
         result(FlutterMethodNotImplemented)
     }
