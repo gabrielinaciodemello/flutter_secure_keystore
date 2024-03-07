@@ -13,16 +13,16 @@ public class CryptUtils {
         let access = SecAccessControlCreateWithFlags(
             nil,
             kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly,
-            .userPresence,
+            .biometryCurrentSet,
             nil
-        ) 
+        )
 
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
             kSecAttrAccount as String: key,
             kSecValueData as String: data.data(using: .utf8)!,
-            kSecAttrAccessControl as String: access as Any,
+            kSecAttrAccessControl as String: access as Any
         ]
         
         SecItemDelete(query as CFDictionary)
