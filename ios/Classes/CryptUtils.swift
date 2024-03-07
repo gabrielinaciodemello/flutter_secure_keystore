@@ -10,12 +10,19 @@ public class CryptUtils {
     }
     
     func save(key: String, data: String) -> Bool {
+        let access = SecAccessControlCreateWithFlags(
+            nil,
+            kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly,
+            .userPresence,
+            nil
+        ) 
+
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
             kSecAttrAccount as String: key,
             kSecValueData as String: data.data(using: .utf8)!,
-            kSecAttrAccessible as String: kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly
+            kSecAttrAccessControl as String: access as Any,
         ]
         
         SecItemDelete(query as CFDictionary)
