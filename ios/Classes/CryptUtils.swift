@@ -31,32 +31,19 @@ public class CryptUtils {
     }
     
     func get(key: String, completion: @escaping (String?) -> Void) {
-        let context = LAContext()
-        var error: NSError?
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassGenericPassword,
+            kSecAttrService as String: self.service,
+            kSecAttrAccount as String: key,
+            kSecReturnData as String: kCFBooleanTrue!,
+            kSecMatchLimit as String: kSecMatchLimitOne
+        ]
         
-        if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
-            context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: "To access secure data") { (success, error) in
-                if success {
-                    let query: [String: Any] = [
-                        kSecClass as String: kSecClassGenericPassword,
-                        kSecAttrService as String: self.service,
-                        kSecAttrAccount as String: key,
-                        kSecReturnData as String: kCFBooleanTrue!,
-                        kSecMatchLimit as String: kSecMatchLimitOne
-                    ]
-                    
-                    var dataTypeRef: AnyObject?
-                    let status = SecItemCopyMatching(query as CFDictionary, &dataTypeRef)
-                    
-                    if status == errSecSuccess, let data = dataTypeRef as? Data, let result = String(data: data, encoding: .utf8) {
-                        completion(result)
-                    } else {
-                        completion(nil)
-                    }
-                } else {
-                    completion(nil)
-                }
-            }
+        var dataTypeRef: AnyObject?
+        let status = SecItemCopyMatching(query as CFDictionary, &dataTypeRef)
+        
+        if status == errSecSuccess, let data = dataTypeRef as? Data, let result = String(data: data, encoding: .utf8) {
+            completion(result)
         } else {
             completion(nil)
         }
