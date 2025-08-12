@@ -35,7 +35,6 @@ class AuthUtils {
                 .setTitle("Authentication is required")
                 .setDescription("Please authenticate to proceed")
                 .setAllowedAuthenticators(BiometricManager.Authenticators.DEVICE_CREDENTIAL)
-                .setNegativeButtonText("Cancel")
                 .build()
             biometricPrompt.authenticate(promptInfo)
             return
